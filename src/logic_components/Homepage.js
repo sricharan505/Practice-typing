@@ -134,7 +134,7 @@ const Homepage = () => {
       <div>
         <textarea
           className="text_area form-control"
-          placeholder="Enter the number of sentences you want to practice typing"
+          placeholder="Enter the number of sentences you want to practice typing. Do not use Autocorrect/Autocomplete."
           value={text}
           readOnly={true}
           onPaste={(e) => {
@@ -193,6 +193,10 @@ const Homepage = () => {
             e.preventDefault();
             return false;
           }}
+          spellcheck="false"
+          autocorrect="off"
+          autocomplete="off"
+          autocapitalize="off"
         ></textarea>
       </div>
 
@@ -207,11 +211,12 @@ const Homepage = () => {
             <h4>Errors: {nerrors}</h4>
             <h4>Total Words: {wcount} </h4>
             <h4>
-              Accuracy :{" "}
+              Accuracy :
               {timer > 0 ? ((wcount / (wcount + nerrors)) * 100).toFixed(2) : 0}
+              %
             </h4>
             <h4>
-              Words per minute :{" "}
+              Words per minute :
               {timer > 0 ? (wcount / (timer / 60)).toFixed(2) : 0}
             </h4>
             <br></br>

@@ -55,7 +55,7 @@ h1{
 
 .popupwindow{
   width:50%;
-  height:50%;
+  
   background-color: rgb(137, 190, 139);
   color: black;
   position:absolute;
@@ -68,14 +68,15 @@ h1{
 
 .popupwindow button{
   border-width:2px;
+  background-color: antiquewhite;
   border-color: black ;
   font-size: large;
   font-weight: 600;
 }
 
 .popupbg{
-  width:100%;
-  height:100%;
+  width:100vw;
+  height:100vh;
   position: absolute;
   top: 0%;
   right: 0%;

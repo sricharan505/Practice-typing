@@ -4,8 +4,8 @@ import "./App.css";
 
 function App() {
   return (
-    <div >
-      <h1>Typing Practice</h1>
+    <div className="container-lg" >
+      <h1 className="center">Practice your Typing Skills here!</h1>
       <Homepage />
     </div>
   );

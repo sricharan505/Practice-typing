@@ -63,6 +63,7 @@ const Homepage = () => {
       <label>Number of Sentences</label>
 
       <input
+        
         type="number"
         value={s_length}
         onChange={(event) => {

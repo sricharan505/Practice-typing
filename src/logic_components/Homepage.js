@@ -13,9 +13,10 @@ const Homepage = () => {
   const [starttimer, setStarttimer] = useState(false);
   const [timer, setTimer] = useState(0);
   const [complete,setComplete] = useState(false);
+  const [showResults,setShowResults] = useState(false);
 
   const handleReset = () => {
-    setS_length(1);
+    setS_length("");
     setText("");
     setUtext("");
     setCurrentpos(0);
@@ -51,54 +52,84 @@ const Homepage = () => {
 
   useEffect(()=>{
     //if user has completed typing the sentences.
-    if (text === utext) {
+    if (text === utext && text.length > 0) {
       setStarttimer(false);
       setComplete(true);
+      setShowResults(true);
     }
   },[utext]);
 
-  //console.log(typeof s_length);
+  // useEffect(()=>{
+  //   if (complete === true && text.length > 0) 
+  //   {
+  //     const interval2 = setInterval(() => setShowResults(true), 500);
+
+  //     return () => clearInterval(interval2);
+  //   }
+  // },[complete])
+  //console.log(showResults);
   return (
     <>
-      <div className="input-group">
-        <span className="input-group-text">Number of Sentences</span>
-        <div>
-          <input
-            id="s_length"
-            className="form-control"
-            type="number"
-            value={s_length}
-            onChange={(event) => {
-              return setS_length(event.target.value);
+      <div className="row justify-content-evenly align-items-center">
+        <div className="col col-md-6 col-sm-12 col-xs-12 input-group align-items-center">
+          <span className="input-group-text">Number of Sentences</span>
+          <div>
+            <input
+              id="s_length"
+              className="form-control"
+              type="number"
+              value={s_length}
+              onChange={(event) => {
+                return setS_length(event.target.value);
+              }}
+              min="1"
+            ></input>
+          </div>
+          <button
+            className="btn btn-outline-secondary btn_custom"
+            onClick={async () => {
+              if (parseInt(s_length) === 0 || isNaN(parseInt(s_length))) {
+                return alert("enter a digit greater than 0");
+              } else {
+                return setText(await randomText(s_length));
+              }
             }}
-          ></input>
+          >
+            Let's Go
+          </button>
         </div>
-        <button
-          className="btn btn-outline-secondary btn_custom"
-          onClick={async () => {
-            if (parseInt(s_length) === 0 || isNaN(parseInt(s_length))) {
-              return alert("enter a digit greater than 0");
-            } else {
-              return setText(await randomText(s_length));
-            }
-          }}
-        >
-          Let's Go
-        </button>
-        <button
-          className="btn btn-outline-secondary btn_custom"
-          onClick={() => handleReset()}
-        >
-          Reset
-        </button>
-      </div>
 
+        <div className="col col-md-6 col-sm-12 col-xs-12 row justify-content-evenly align-items-center">
+          <div className="col-md-3 col-sm-6 input-group">
+            <span className="input-group-text">Time</span>
+            <span className="input-group-text">
+              {Math.floor(timer / 60) < 10
+                ? "0" + Math.floor(timer / 60)
+                : Math.floor(timer / 60)}
+              :{timer % 60 < 10 ? "0" + (timer % 60) : timer % 60}
+            </span>
+          </div>
+
+          <div className="col-md-3 col-sm-6 input-group">
+            <span className="input-group-text">WPM</span>
+            <span className="input-group-text">
+              {timer > 0 ? (wcount / (timer / 60)).toFixed(2) : 0}
+            </span>
+          </div>
+        </div>
+      </div>
       <br></br>
-      {/* {parseInt(s_length) === 0 || s_length.trim().length === 0 ? (
-        <p>Enter the number of sentences you want to practice typing.</p>
-      ) : (
-        <></>
-      )} */}
+      <div className="row ">
+        <div className="center">
+          <button
+            className="btn btn-outline-secondary btn_custom"
+            onClick={() => handleReset()}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+      <br></br>
 
       <div>
         <textarea
@@ -106,11 +137,19 @@ const Homepage = () => {
           placeholder="Enter the number of sentences you want to practice typing"
           value={text}
           readOnly={true}
+          onPaste={(e) => {
+            e.preventDefault();
+            return false;
+          }}
+          onCopy={(e) => {
+            e.preventDefault();
+            return false;
+          }}
         ></textarea>
       </div>
 
       <br></br>
-      {/* <p id="randomText">{text}</p> */}
+
       <br></br>
       <div>
         <textarea
@@ -146,23 +185,42 @@ const Homepage = () => {
               }
             }
           }}
+          onPaste={(e) => {
+            e.preventDefault();
+            return false;
+          }}
+          onCopy={(e) => {
+            e.preventDefault();
+            return false;
+          }}
         ></textarea>
       </div>
 
-      <h1>{complete ? "complete" : ""}</h1>
-      <h1>
-        Timer:- {Math.floor(timer / 60)}:{timer % 60}
-      </h1>
-      <h1>Error count : {nerrors}</h1>
-      <h1>Word count : {wcount}</h1>
-      <h1>Total Words : {totwords}</h1>
-      <h1>
-        Accuracy :{" "}
-        {timer > 0 ? ((wcount / (wcount + nerrors)) * 100).toFixed(2) : 0}
-      </h1>
-      <h1>
-        words per minute : {timer > 0 ? (wcount / (timer / 60)).toFixed(2) : 0}
-      </h1>
+      <div className={`popupbg ${showResults ? "" : "displaynone"}`}>
+        <div className="popupwindow">
+          <h2>Your Results</h2>
+          <br></br>
+          <div>
+            <h4>
+              Time Taken: {timer > 0 ? (wcount / (timer / 60)).toFixed(2) : 0}
+            </h4>
+            <h4>Errors: {nerrors}</h4>
+            <h4>Total Words: {wcount} </h4>
+            <h4>
+              Accuracy :{" "}
+              {timer > 0 ? ((wcount / (wcount + nerrors)) * 100).toFixed(2) : 0}
+            </h4>
+            <h4>
+              Words per minute :{" "}
+              {timer > 0 ? (wcount / (timer / 60)).toFixed(2) : 0}
+            </h4>
+            <br></br>
+            <button className="btn" onClick={() => setShowResults(false)}>
+              Okay
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

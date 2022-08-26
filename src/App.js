@@ -6,6 +6,7 @@ function App() {
   return (
     <div className="container-lg" >
       <h1 className="center">Practice your Typing Skills here!</h1>
+      <br></br>
       <Homepage />
     </div>
   );
